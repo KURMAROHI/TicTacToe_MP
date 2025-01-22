@@ -23,6 +23,7 @@ public class GameVisualManager : NetworkBehaviour
         GameManager.InStance.OnRematch += GameManager_OnRematch;
     }
 
+   
     private void GameManager_OnRematch(object sender, EventArgs e)
     {
 

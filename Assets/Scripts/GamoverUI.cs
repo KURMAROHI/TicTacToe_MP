@@ -7,11 +7,13 @@ public class GamoverUI : MonoBehaviour
     [SerializeField] private Text _resultText;
     [SerializeField] private Color _winColor;
     [SerializeField] private Color _loseColor;
+    [SerializeField] private Color _tieColor;
     [SerializeField] private Button _reMatchButton;
 
     private void Awake()
     {
-        _reMatchButton.onClick.AddListener(()=>{
+        _reMatchButton.onClick.AddListener(() =>
+        {
             GameManager.InStance.RematchRpc();
         });
     }
@@ -21,7 +23,16 @@ public class GamoverUI : MonoBehaviour
         Hide();
         GameManager.InStance.OnGameWin += GameManager_OnGameWin;
         GameManager.InStance.OnRematch += GameManager_OnRemacth;
+        GameManager.InStance.OnGameTied += GameManager_OnGameTied;
 
+
+    }
+
+    private void GameManager_OnGameTied(object sender, EventArgs e)
+    {
+        _resultText.text = "TIE!";
+        _resultText.color = _tieColor;
+        Show();
     }
 
     private void GameManager_OnRemacth(object sender, EventArgs e)

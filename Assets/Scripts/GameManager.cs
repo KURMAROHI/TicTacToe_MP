@@ -24,6 +24,9 @@ public class GameManager : NetworkBehaviour
     }
     public event EventHandler OnCurrentPlayblePlayerChange;
     public event EventHandler OnRematch;
+    public event EventHandler OnGameTied;
+    public event EventHandler OnScoreChange;
+    public event EventHandler OnPlaceObject;
 
     private void Awake()
     {
@@ -117,6 +120,7 @@ public class GameManager : NetworkBehaviour
         }
 
         _playerTypeArray[x, y] = playerType;
+        TriggerOnPlaceObjectRpc();
 
         OnClickedOnGrisPosition?.Invoke(this, new ClickedOnGridPositionEventArgs
         {
@@ -137,6 +141,13 @@ public class GameManager : NetworkBehaviour
         }
 
         TestWinner();
+    }
+
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnPlaceObjectRpc()
+    {
+        OnPlaceObject?.Invoke(this, EventArgs.Empty);
     }
 
     public override void OnNetworkSpawn()
@@ -161,6 +172,16 @@ public class GameManager : NetworkBehaviour
         _currentPlayblePlayerType.OnValueChanged += (PlayerType oldPlayerType, PlayerType newPlayerType) =>
         {
             OnCurrentPlayblePlayerChange?.Invoke(this, EventArgs.Empty);
+        };
+
+        _playerCrossScore.OnValueChanged += (int prevScore, int newScore) =>
+        {
+            OnScoreChange?.Invoke(this, EventArgs.Empty);
+        };
+
+        _playerCirCleScore.OnValueChanged += (int prevScore, int newScore) =>
+        {
+            OnScoreChange?.Invoke(this, EventArgs.Empty);
         };
 
     }
@@ -193,11 +214,47 @@ public class GameManager : NetworkBehaviour
             {
                 Debug.Log("Winner");
                 _currentPlayblePlayerType.Value = PlayerType.None;
-                TriggerOnGameWindRpc(i, _playerTypeArray[line.CenterGridPosition.x, line.CenterGridPosition.y]);
-                break;
+                PlayerType winPlayerType = _playerTypeArray[line.CenterGridPosition.x, line.CenterGridPosition.y];
+                TriggerOnGameWindRpc(i, winPlayerType);
+                switch (winPlayerType)
+                {
+                    case PlayerType.Cross:
+                        _playerCrossScore.Value++;
+                        break;
+                    case PlayerType.Circle:
+                        _playerCirCleScore.Value++;
+                        break;
+                }
+                return;
 
             }
         }
+
+
+        bool hasTie = true;
+
+        for (int x = 0; x < _playerTypeArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < _playerTypeArray.GetLength(1); y++)
+            {
+                if (_playerTypeArray[x, y] == PlayerType.None)
+                {
+                    hasTie = false;
+                    break;
+                }
+            }
+        }
+
+        if (hasTie)
+        {
+            TriggerOnGameTiedRpc();
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnGameTiedRpc()
+    {
+        OnGameTied?.Invoke(this, EventArgs.Empty);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -251,6 +308,12 @@ public class GameManager : NetworkBehaviour
 
     }
 
+    public void GetScores(out int playerCrossScore, out int playerCirCleScore)
+    {
+        playerCrossScore = this._playerCrossScore.Value;
+        playerCirCleScore = this._playerCirCleScore.Value;
+    }
+
     public enum PlayerType
     {
         None,
@@ -277,4 +340,7 @@ public class GameManager : NetworkBehaviour
     private NetworkVariable<PlayerType> _currentPlayblePlayerType = new NetworkVariable<PlayerType>();
     private PlayerType[,] _playerTypeArray;
     private List<Line> _lineList;
+
+    private NetworkVariable<int> _playerCrossScore = new NetworkVariable<int>();
+    private NetworkVariable<int> _playerCirCleScore = new NetworkVariable<int>();
 }
