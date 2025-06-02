@@ -11,5 +11,5 @@ A basic 2D multiplayer Tic Tac Toe game created with Unity and Netcode for GameO
 
 ## Getting Started
 1. Clone the repo  
-2. Open in Unity 2022.3+  
+2. Open the project in Unity 6
 3. Host or Join a match and start playing!
