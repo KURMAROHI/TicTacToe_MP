@@ -1,2 +1,15 @@
-# TicTacToe_Multiplayer
- This is a Multiplayer Tic Tac Toe Game built in Unity using Netcode for GameObjects. The project demonstrates:  Real-time multiplayer functionality with synchronized gameplay. A user-friendly 2D interface for an enhanced visual experience. Smooth communication between players using Unity's Networking APIs.
+# TicTacToe Multiplayer
+
+A basic 2D multiplayer Tic Tac Toe game created with Unity and Netcode for GameObjects, allowing two players to play in real-time.
+
+## Features
+- Simple 3x3 multiplayer board
+- Real-time turn handling with RPCs and Network Variables
+- Win/draw detection logic
+- Clean and minimal 2D UI
+- Built with Unity Netcode for GameObjects
+
+## Getting Started
+1. Clone the repo  
+2. Open in Unity 2022.3+  
+3. Host or Join a match and start playing!
