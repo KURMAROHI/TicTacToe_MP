@@ -7,7 +7,7 @@ public class GameManager : NetworkBehaviour
 {
 
     public static GameManager InStance { get; private set; }
-    public event EventHandler<ClickedOnGridPositionEventArgs> OnClickedOnGrisPosition;
+    public event EventHandler<ClickedOnGridPositionEventArgs> OnClickedOnGrisPosition; //For Spawning objects 
     public class ClickedOnGridPositionEventArgs : EventArgs
     {
         public int X;
@@ -26,8 +26,7 @@ public class GameManager : NetworkBehaviour
     public event EventHandler OnRematch;
     public event EventHandler OnGameTied;
     public event EventHandler OnScoreChange;
-    public event EventHandler OnPlaceObject;
-
+    public event EventHandler OnPlaceObject;  //For placing Sound Effect while Spawning
     private void Awake()
     {
         if (InStance == null)
@@ -188,9 +187,7 @@ public class GameManager : NetworkBehaviour
 
     private bool TestWinnerLine(Line line)
     {
-        // Debug.Log("==>0 index:[" + line.GridVectorIntList[0] + "]::" + _playerTypeArray[line.GridVectorIntList[0].x, line.GridVectorIntList[0].y]
-        //  + "::1 index[" + line.GridVectorIntList[1] + "]::" + _playerTypeArray[line.GridVectorIntList[1].x, line.GridVectorIntList[1].y]
-        //  + "::2 index[" + line.GridVectorIntList[2] + "]::" + _playerTypeArray[line.GridVectorIntList[2].x, line.GridVectorIntList[2].y]);
+
         return TestWinnerLine(
             _playerTypeArray[line.GridVectorIntList[0].x, line.GridVectorIntList[0].y],
             _playerTypeArray[line.GridVectorIntList[1].x, line.GridVectorIntList[1].y],
@@ -289,6 +286,16 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void RematchRpc()
     {
+         Debug.Log("RematchRpc|" );
+
+        // if (NetworkManager.Singleton.IsServer)
+        // {
+        //     Debug.LogError("RematchRpc called on the Server!");
+        // }
+        // else if (NetworkManager.Singleton.IsClient)
+        // {
+        //     Debug.LogError("RematchRpc called on the Client!");
+        // }
         for (int x = 0; x < _playerTypeArray.GetLength(0); x++)
         {
             for (int y = 0; y < _playerTypeArray.GetLength(1); y++)

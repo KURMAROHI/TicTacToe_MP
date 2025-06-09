@@ -14,7 +14,7 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    private void GameManager_OnGameWin(object sender, GameManager.OnGameWinEventArgs e)
+    private void GameManager_OnGameWin(object sender, GameManager.OnGameWinEventArgs e)  //For Spawning Sounds Depends on win or lose
     {
         if (GameManager.InStance.GetLocalPlayerType() == e.winPlayerType)
         {
@@ -28,9 +28,10 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void GameManager_OnPlaceObject(object sender, EventArgs e)
+    private void GameManager_OnPlaceObject(object sender, EventArgs e) //For playing Sounds while placing objects
     {
         Transform sfxTransform = Instantiate(_placeSfxPrefab);
         Destroy(sfxTransform.gameObject, 5f);
     }
 }
+

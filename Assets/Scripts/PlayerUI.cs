@@ -15,6 +15,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("===>PlayerUI");
         _crossArrowGameObject.SetActive(false);
         _circleArrowGameObject.SetActive(false);
         _crossYouTextGameObject.SetActive(false);

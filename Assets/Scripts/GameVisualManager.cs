@@ -98,7 +98,6 @@ public class GameVisualManager : NetworkBehaviour
         }
         Transform spawnedTransform = Instantiate(prefab, GetGridWorldPosition(x, y), Quaternion.identity);
         spawnedTransform.GetComponent<NetworkObject>().Spawn(true);
-        // spawnedTransform.position=GetGridWorldPosition(x, y);
         _visualGameObjects.Add(spawnedTransform.gameObject);
     }
 }
